@@ -6,8 +6,26 @@
     <title>Document</title>
 </head>
 <body>
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+    
     {% for task in tasks %}
-        <p>{{ task.title }}</p>
+        {% if task.task_complete == True %}
+            <strike>{{task.title}}</strike>
+            <a href="{% url 'todo:delete-task' pk=task.id %}"><h5>Delete</h5></a>
+        {% else %}
+            <p>{{ task.title }}</p>
+            <a href="{% url 'todo:edit-task' pk=task.id %}"><h5>Edit</h5></a>
+            <a href="{% url 'todo:delete-task' pk=task.id %}"><h5>Delete</h5></a>
+            <a href="{% url 'todo:complete-task' pk=task.id %}"><h5>Done</h5></a>
+            <a href="{% url 'todo:tasks' %}"><h5>Add</h5></a>
+        {% endif %}
+    {% empty %}
+            <h3>There are no tasks yet!</h3>
+            <a href="{% url 'todo:tasks' %}"><h5>Add</h5></a>
     {% endfor %}
+    <a href="{% url 'accounts:logout' %}"><h2>Logout</h2></a>
 </body>
 </html>
